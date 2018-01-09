@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180109154634) do
+ActiveRecord::Schema.define(version: 20180109154855) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -130,6 +130,19 @@ ActiveRecord::Schema.define(version: 20180109154634) do
     t.index ["payer_id"], name: "index_payers_concentrations_on_payer_id"
   end
 
+  create_table "payers_limits", force: :cascade do |t|
+    t.bigint "payer_id"
+    t.integer "total_limit_cents", default: 0, null: false
+    t.string "total_limit_currency", default: "BRL", null: false
+    t.integer "used_limit_cents", default: 0, null: false
+    t.string "used_limit_currency", default: "BRL", null: false
+    t.bigint "operation_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["operation_id"], name: "index_payers_limits_on_operation_id"
+    t.index ["payer_id"], name: "index_payers_limits_on_payer_id"
+  end
+
   create_table "rebuys", force: :cascade do |t|
     t.bigint "operation_id"
     t.bigint "invoice_id"
@@ -175,6 +188,19 @@ ActiveRecord::Schema.define(version: 20180109154634) do
     t.index ["seller_id"], name: "index_sellers_concentrations_on_seller_id"
   end
 
+  create_table "sellers_limits", force: :cascade do |t|
+    t.bigint "seller_id"
+    t.integer "total_limit_cents", default: 0, null: false
+    t.string "total_limit_currency", default: "BRL", null: false
+    t.integer "used_limit_cents", default: 0, null: false
+    t.string "used_limit_currency", default: "BRL", null: false
+    t.bigint "operation_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["operation_id"], name: "index_sellers_limits_on_operation_id"
+    t.index ["seller_id"], name: "index_sellers_limits_on_seller_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -197,9 +223,13 @@ ActiveRecord::Schema.define(version: 20180109154634) do
   add_foreign_key "installments", "invoices"
   add_foreign_key "payers_concentrations", "operations"
   add_foreign_key "payers_concentrations", "payers"
+  add_foreign_key "payers_limits", "operations"
+  add_foreign_key "payers_limits", "payers"
   add_foreign_key "rebuys", "invoices"
   add_foreign_key "rebuys", "operations"
   add_foreign_key "sellers", "clients"
   add_foreign_key "sellers_concentrations", "operations"
   add_foreign_key "sellers_concentrations", "sellers"
+  add_foreign_key "sellers_limits", "operations"
+  add_foreign_key "sellers_limits", "sellers"
 end
