@@ -17,6 +17,11 @@ gem 'simple_form'
 gem 'uglifier'
 gem 'webpacker'
 
+# The gems bellow were installad by us after Le Wagon template:
+
+# This gem treats money as cents in integer with the respective currency
+gem 'money-rails', '~>1' #https://github.com/RubyMoney/money-rails
+
 group :development do
   gem 'web-console', '>= 3.3.0'
 end
