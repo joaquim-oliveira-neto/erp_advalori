@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180109153942) do
+ActiveRecord::Schema.define(version: 20180109154237) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -23,6 +23,33 @@ ActiveRecord::Schema.define(version: 20180109153942) do
     t.string "available_funds_currency", default: "BRL", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "equity_holders", force: :cascade do |t|
+    t.bigint "payer_id"
+    t.bigint "seller_id"
+    t.string "first_name"
+    t.string "last_name"
+    t.string "cpf"
+    t.datetime "birthday"
+    t.string "nationality"
+    t.string "phone_number"
+    t.string "email"
+    t.string "total_equity"
+    t.string "ordinary_equity"
+    t.string "signature"
+    t.datetime "partnership_date"
+    t.string "zip_code"
+    t.string "address"
+    t.string "address_number"
+    t.string "neigborhood"
+    t.string "address_2"
+    t.string "state"
+    t.string "city"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["payer_id"], name: "index_equity_holders_on_payer_id"
+    t.index ["seller_id"], name: "index_equity_holders_on_seller_id"
   end
 
   create_table "installments", force: :cascade do |t|
@@ -143,6 +170,8 @@ ActiveRecord::Schema.define(version: 20180109153942) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "equity_holders", "payers"
+  add_foreign_key "equity_holders", "sellers"
   add_foreign_key "installments", "invoices"
   add_foreign_key "rebuys", "invoices"
   add_foreign_key "rebuys", "operations"
