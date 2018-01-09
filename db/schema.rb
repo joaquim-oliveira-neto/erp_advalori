@@ -10,10 +10,26 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180109150638) do
+ActiveRecord::Schema.define(version: 20180109152848) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "installments", force: :cascade do |t|
+    t.bigint "invoice_id"
+    t.string "number"
+    t.integer "value_cents", default: 0, null: false
+    t.string "value_currency", default: "BRL", null: false
+    t.datetime "due_date"
+    t.integer "outstanding_days"
+    t.integer "interest_cents", default: 0, null: false
+    t.string "interest_currency", default: "BRL", null: false
+    t.integer "ad_valorem_cents", default: 0, null: false
+    t.string "ad_valorem_currency", default: "BRL", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["invoice_id"], name: "index_installments_on_invoice_id"
+  end
 
   create_table "invoices", force: :cascade do |t|
     t.string "type"
@@ -60,4 +76,5 @@ ActiveRecord::Schema.define(version: 20180109150638) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  add_foreign_key "installments", "invoices"
 end
