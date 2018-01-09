@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180109154855) do
+ActiveRecord::Schema.define(version: 20180109163809) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -87,6 +87,10 @@ ActiveRecord::Schema.define(version: 20180109154855) do
     t.string "average_ad_valorem_currency", default: "BRL", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "operation_id"
+    t.bigint "payer_id"
+    t.index ["operation_id"], name: "index_invoices_on_operation_id"
+    t.index ["payer_id"], name: "index_invoices_on_payer_id"
   end
 
   create_table "operations", force: :cascade do |t|
@@ -94,6 +98,49 @@ ActiveRecord::Schema.define(version: 20180109154855) do
     t.string "total_value_currency", default: "BRL", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "average_interest_cents", default: 0, null: false
+    t.string "average_interest_currency", default: "BRL", null: false
+    t.integer "average_ad_valorem_cents", default: 0, null: false
+    t.string "average_ad_valorem_currency", default: "BRL", null: false
+    t.integer "average_outstanding_days_cents", default: 0, null: false
+    t.string "average_outstanding_days_currency", default: "BRL", null: false
+    t.integer "fee_instrucoes_bancarias_em_titulos_cents", default: 0, null: false
+    t.string "fee_instrucoes_bancarias_em_titulos_currency", default: "BRL", null: false
+    t.integer "fee_aditivo_cents", default: 0, null: false
+    t.string "fee_aditivo_currency", default: "BRL", null: false
+    t.integer "fee_cobranca_custodia_cheques_cents", default: 0, null: false
+    t.string "fee_cobranca_custodia_cheques_currency", default: "BRL", null: false
+    t.integer "fee_consulta_de_credito_cents", default: 0, null: false
+    t.string "fee_consulta_de_credito_currency", default: "BRL", null: false
+    t.integer "fee_cobranca_notificacao_duplicatas_cents", default: 0, null: false
+    t.string "fee_cobranca_notificacao_duplicatas_currency", default: "BRL", null: false
+    t.integer "fee_doc_ted_transferencia_cents", default: 0, null: false
+    t.string "fee_doc_ted_transferencia_currency", default: "BRL", null: false
+    t.integer "tax_iss_cents", default: 0, null: false
+    t.string "tax_iss_currency", default: "BRL", null: false
+    t.integer "tax_pis_cents", default: 0, null: false
+    t.string "tax_pis_currency", default: "BRL", null: false
+    t.integer "tax_cofins_cents", default: 0, null: false
+    t.string "tax_cofins_currency", default: "BRL", null: false
+    t.integer "tax_retained_pis_cents", default: 0, null: false
+    t.string "tax_retained_pis_currency", default: "BRL", null: false
+    t.integer "tax_retained_cofins_cents", default: 0, null: false
+    t.string "tax_retained_cofins_currency", default: "BRL", null: false
+    t.integer "tax_retained_irpj_cents", default: 0, null: false
+    t.string "tax_retained_irpj_currency", default: "BRL", null: false
+    t.integer "tax_retained_csll_cents", default: 0, null: false
+    t.string "tax_retained_csll_currency", default: "BRL", null: false
+    t.integer "tax_retained_iof_cents", default: 0, null: false
+    t.string "tax_retained_iof_currency", default: "BRL", null: false
+    t.integer "advancement_cents", default: 0, null: false
+    t.string "advancement_currency", default: "BRL", null: false
+    t.integer "tax_ratained_iof_adicional_cents", default: 0, null: false
+    t.string "tax_ratained_iof_adicional_currency", default: "BRL", null: false
+    t.datetime "approval_date"
+    t.datetime "closure_date"
+    t.string "status"
+    t.bigint "seller_id"
+    t.index ["seller_id"], name: "index_operations_on_seller_id"
   end
 
   create_table "payers", force: :cascade do |t|
@@ -214,6 +261,8 @@ ActiveRecord::Schema.define(version: 20180109154855) do
     t.inet "last_sign_in_ip"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "client_id"
+    t.index ["client_id"], name: "index_users_on_client_id"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
@@ -221,6 +270,9 @@ ActiveRecord::Schema.define(version: 20180109154855) do
   add_foreign_key "equity_holders", "payers"
   add_foreign_key "equity_holders", "sellers"
   add_foreign_key "installments", "invoices"
+  add_foreign_key "invoices", "operations"
+  add_foreign_key "invoices", "payers"
+  add_foreign_key "operations", "sellers"
   add_foreign_key "payers_concentrations", "operations"
   add_foreign_key "payers_concentrations", "payers"
   add_foreign_key "payers_limits", "operations"
@@ -232,4 +284,5 @@ ActiveRecord::Schema.define(version: 20180109154855) do
   add_foreign_key "sellers_concentrations", "sellers"
   add_foreign_key "sellers_limits", "operations"
   add_foreign_key "sellers_limits", "sellers"
+  add_foreign_key "users", "clients"
 end
