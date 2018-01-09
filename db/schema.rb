@@ -10,10 +10,31 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180109144307) do
+ActiveRecord::Schema.define(version: 20180109150638) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "invoices", force: :cascade do |t|
+    t.string "type"
+    t.string "invoice_number"
+    t.string "contract_number"
+    t.string "check_number"
+    t.string "status"
+    t.string "delivery_status"
+    t.boolean "confirmed"
+    t.boolean "notified"
+    t.boolean "boleto_especial"
+    t.integer "average_outstanding_days"
+    t.integer "total_value_cents", default: 0, null: false
+    t.string "total_value_currency", default: "BRL", null: false
+    t.integer "average_interest_cents", default: 0, null: false
+    t.string "average_interest_currency", default: "BRL", null: false
+    t.integer "average_ad_valorem_cents", default: 0, null: false
+    t.string "average_ad_valorem_currency", default: "BRL", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "operations", force: :cascade do |t|
     t.integer "total_value_cents", default: 0, null: false
