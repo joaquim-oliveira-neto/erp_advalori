@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180109152848) do
+ActiveRecord::Schema.define(version: 20180109153023) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -59,6 +59,15 @@ ActiveRecord::Schema.define(version: 20180109152848) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "rebuys", force: :cascade do |t|
+    t.bigint "operation_id"
+    t.bigint "invoice_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["invoice_id"], name: "index_rebuys_on_invoice_id"
+    t.index ["operation_id"], name: "index_rebuys_on_operation_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
@@ -77,4 +86,6 @@ ActiveRecord::Schema.define(version: 20180109152848) do
   end
 
   add_foreign_key "installments", "invoices"
+  add_foreign_key "rebuys", "invoices"
+  add_foreign_key "rebuys", "operations"
 end
