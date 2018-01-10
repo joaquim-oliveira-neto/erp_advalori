@@ -1,6 +1,8 @@
 class SellersController < ApplicationController
-  def new
-    @seller = Seller.new
+  def new(seller = Seller.new)
+    # There are two possible values for @seller because the first one is for a new form and the second
+    # is for a form that will be completed with information fetched from the API that checks CNPJ
+    @seller = seller
   end
 
   def create

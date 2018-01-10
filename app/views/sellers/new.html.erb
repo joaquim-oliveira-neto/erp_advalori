@@ -1,3 +1,6 @@
 <h1>Cadastro de Cendete</h1>
 
-<%= render 'shared/company_sign_up_form', company: @seller, company_path: sellers_path %>
+<%= render 'shared/cnpj_check_form', cnpj: @seller, redirect_path: cnpj_check_path %>
+<%= render 'shared/company_sign_up_form', company: @seller, redirect_path: sellers_path %>
+
+<%= link_to "Procurar CNPJ", cnpj_check_path %>

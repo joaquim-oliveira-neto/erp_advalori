@@ -1,8 +1,7 @@
 <div class="container">
   <div class="row">
     <div class="col-xs-12">
-      <%= simple_form_for(company, url: company_path) do |f| %>
-        <%= f.input :identification_number %>
+      <%= simple_form_for(company, url: redirect_path) do |f| %>
         <%= f.input :company_name %>
         <%= f.input :company_nickname %>
         <%= f.input :business_entity %>
