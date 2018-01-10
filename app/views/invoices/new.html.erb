@@ -1,2 +1,26 @@
-<h1>Invoices#new</h1>
-<p>Find me in app/views/invoices/new.html.erb</p>
+<div class="container">
+  <div>
+    <h2>Upload de documento</h2>
+    <%= link_to "XML" %>
+    <%= link_to "IMG" %>
+    <%= link_to "PDF" %>
+  </div>
+  <div>
+    <h2>Dados do título</h2>
+      <div class="container">
+      <div class="row">
+        <div class="col-xs-12">
+          <%= simple_form_for(@invoice, url: invoices_path) do |f| %>
+            <%= f.association :payer %>
+            <%= f.association :seller %>
+            <%= f.input :type , as: :radio_buttons, collection: [['Nota fiscal', 'nota_fiscal'], ['Cheque', 'check'], ['Outros', 'outro']], label: "Tipo de documento:" %>
+            <%= f.input :invoice_number %>
+            <%= f.input :contract_number %>
+            <%= f.input :check_number %>
+            <%= f.submit "Salvar invoice", class: "btn btn-primary" %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

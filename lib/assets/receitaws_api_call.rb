@@ -8,5 +8,4 @@ class ReceitawsApiCall
     cnpj_report = JSON.parse(cnpj_report_serialized)
     return cnpj_report
   end
-
 end
