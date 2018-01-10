@@ -16,6 +16,7 @@ require "sprockets/railtie"
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+
 module ErpAdvalori
   class Application < Rails::Application
     config.generators do |generate|
@@ -32,5 +33,8 @@ module ErpAdvalori
 
     # Don't generate system test files.
     config.generators.system_tests = nil
+
+    # Use the APIs inside lib/ NOTE: this may cause the app to run slower (Joaquim - 2017/01/10)
+    config.autoload_paths += %W(#{config.root}/lib/assets)
   end
 end
