@@ -17,7 +17,21 @@
             <%= f.input :invoice_number %>
             <%= f.input :contract_number %>
             <%= f.input :check_number %>
+            <table class="table">
+              <thead>
+                <th></th>
+                <th>Número</th>
+                <th>Valor de face</th>
+                <th>Data de Vencimento</th>
+              </thead>
+              <tbody class="installments">
+                <%= f.simple_fields_for :installments do |builder| %>
+                  <%= render 'installment_fields', f: builder %>
+                <% end %>
+              </tbody>
+            </table>
             <%= f.submit "Salvar invoice", class: "btn btn-primary" %>
+            <%= link_to_add_association 'Adicionar parcela', f, :installments, class: "btn btn-primary", data: { association_insertion_node: '.installments', association_insertion_method: :append }  %>
           <% end %>
         </div>
       </div>
