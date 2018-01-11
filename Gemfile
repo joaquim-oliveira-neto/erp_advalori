@@ -16,6 +16,7 @@ gem 'sass-rails'
 gem 'simple_form'
 gem 'uglifier'
 gem 'webpacker'
+gem "paperclip", "~> 5.0.0"
 
 # The gems bellow were installad by us after Le Wagon template:
 

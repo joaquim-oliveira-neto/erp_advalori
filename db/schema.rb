@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180109163809) do
+ActiveRecord::Schema.define(version: 20180110211518) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -89,6 +89,10 @@ ActiveRecord::Schema.define(version: 20180109163809) do
     t.datetime "updated_at", null: false
     t.bigint "operation_id"
     t.bigint "payer_id"
+    t.string "xml_file_name"
+    t.string "xml_content_type"
+    t.integer "xml_file_size"
+    t.datetime "xml_updated_at"
     t.index ["operation_id"], name: "index_invoices_on_operation_id"
     t.index ["payer_id"], name: "index_invoices_on_payer_id"
   end

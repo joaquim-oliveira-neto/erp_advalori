@@ -1,2 +1,16 @@
-<h1>Invoices#new</h1>
-<p>Find me in app/views/invoices/new.html.erb</p>
+<%= simple_form_for @invoice, url: invoices_path do |f| %>
+  <%= f.error_notification %>
+
+  <div class="form-inputs">
+    <div class="control-group">
+      <%= f.label :xml_file, class: 'control-label' %>
+        <div class="controls">
+          <%= f.file_field :xml_file %>
+        </div>
+    </div>
+    <div class="form-actions">
+      <%= f.submit nil, :class => 'btn btn-primary' %>
+    </div>
+  </div>
+
+<% end %>
