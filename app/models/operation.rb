@@ -5,4 +5,5 @@ class Operation < ApplicationRecord
   has_many :sellers_limits
   has_many :payers_limits
   has_many :invoices
+  belongs_to :seller
 end
