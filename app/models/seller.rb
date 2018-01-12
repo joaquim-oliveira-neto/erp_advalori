@@ -4,4 +4,5 @@ class Seller < ApplicationRecord
   has_many :sellers_limits
   has_many :sellers_concentrations
   has_many :operations
+  has_many :invoices, through: :operations
 end
