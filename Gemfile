@@ -16,12 +16,17 @@ gem 'sass-rails'
 gem 'simple_form'
 gem 'uglifier'
 gem 'webpacker'
-gem "paperclip", "~> 5.0.0"
 
 # The gems bellow were installad by us after Le Wagon template:
 
-# This gem treats money as cents in integer with the respective currency
+#   This gem treats money as cents in integer with the respective currency
 gem 'money-rails', '~> 1' #https://github.com/RubyMoney/money-rails
+
+#   This gem is used to make nested-models forms, e.x: the form of operation has the intallments obejtcs inside https://github.com/nathanvda/cocoon
+gem 'cocoon'
+
+#   This gem is used to upload documents using a form
+gem "paperclip", "~> 5.0.0"
 
 group :development do
   gem 'web-console', '>= 3.3.0'

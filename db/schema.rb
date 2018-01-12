@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180110211518) do
+ActiveRecord::Schema.define(version: 20180111173645) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -69,7 +69,6 @@ ActiveRecord::Schema.define(version: 20180110211518) do
   end
 
   create_table "invoices", force: :cascade do |t|
-    t.string "type"
     t.string "invoice_number"
     t.string "contract_number"
     t.string "check_number"
@@ -89,6 +88,7 @@ ActiveRecord::Schema.define(version: 20180110211518) do
     t.datetime "updated_at", null: false
     t.bigint "operation_id"
     t.bigint "payer_id"
+    t.string "invoice_type"
     t.string "xml_file_name"
     t.string "xml_content_type"
     t.integer "xml_file_size"
