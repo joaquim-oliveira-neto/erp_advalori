@@ -7,20 +7,20 @@ class Invoice < ApplicationRecord
   accepts_nested_attributes_for :installments,
                                 allow_destroy: true
                                 # reject_if: :all_blank
+  # We need this to upload the invoices in xml format
   has_attached_file :xml_file
+
+  # We need this so that the program understands that total_value is a Money object
+  monetize :total_value_cents, with_model_currency: :currency
+
 
   def self.from_file(file)
     doc = Nokogiri::XML(file.read)
     file.rewind
     invoice = Invoice.new
     invoice.invoice_number = doc.search('fat nFat').text.strip
-    invoice.total_value_cents = doc.search('fat vLiq').text.to_f
-    # invoice.save!
+    invoice.total_value = Money.new(doc.search('fat vLiq').text.to_i)
     return invoice
   end
-
-  # def seller
-  #   operation.seller
-  # end
 
 end

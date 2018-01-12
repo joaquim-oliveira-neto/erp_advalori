@@ -12,25 +12,10 @@ class InvoicesController < ApplicationController
     else
       redirect_to new_invoice_path
     end
-
-      # if @invoice.nil?
-      #   redirect_to new_invoice_path
-        # return
-    #   end
-    #   render :new
-    # else
-    #   redirect_to new_invoice_path
-      # @invoice = Invoice.new(invoice_params)
-      # @invoice.payer = payer
-      # @invoice.seller = current_user.client.seller
-      # @invoice.save!
-    # end
-    # redirect_to root_path
   end
 
   def create
     @invoice = Invoice.new(invoice_params)
-    # @seller.client = current_user.client
     @invoice.save
     if @invoice.save
       redirect_to root_path
@@ -45,6 +30,6 @@ class InvoicesController < ApplicationController
     # In the strong parameters we need to pass the attributes of intallments so that the invoice form can undertant it
     params
       .require(:invoice)
-      .permit(:invoice_number, :total_value, :contract_number, :check_number, :invoice_type, installments_attributes: [:id, :invoice_id, :_destroy, :number, :value_cents, :due_date])
+      .permit(:invoice_number, :total_value_cents, :contract_number, :check_number, :invoice_type, installments_attributes: [:id, :invoice_id, :_destroy, :number, :value_cents, :due_date])
   end
 end

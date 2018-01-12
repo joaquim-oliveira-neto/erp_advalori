@@ -48,8 +48,9 @@
                 <% end %>
               </tbody>
             </table>
-            <%= f.submit "Salvar invoice", class: "btn btn-primary" %>
             <%= link_to_add_association 'Adicionar parcela', f, :installments, class: "btn btn-primary", data: { association_insertion_node: '.installments', association_insertion_method: :append }  %>
+            <%= f.input :total_value%>
+            <%= f.submit "Salvar invoice", class: "btn btn-primary" %>
           <% end %>
         </div>
       </div>
