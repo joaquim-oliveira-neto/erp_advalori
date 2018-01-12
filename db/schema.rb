@@ -89,6 +89,10 @@ ActiveRecord::Schema.define(version: 20180111173645) do
     t.bigint "operation_id"
     t.bigint "payer_id"
     t.string "invoice_type"
+    t.string "xml_file_name"
+    t.string "xml_content_type"
+    t.integer "xml_file_size"
+    t.datetime "xml_updated_at"
     t.index ["operation_id"], name: "index_invoices_on_operation_id"
     t.index ["payer_id"], name: "index_invoices_on_payer_id"
   end
