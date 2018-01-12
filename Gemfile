@@ -25,6 +25,7 @@ gem 'money-rails', '~> 1' #https://github.com/RubyMoney/money-rails
 # This gem is used to make nested-models forms, e.x: the form of operation has the intallments obejtcs inside https://github.com/nathanvda/cocoon
 gem 'cocoon'
 
+
 group :development do
   gem 'web-console', '>= 3.3.0'
 end
