@@ -7,19 +7,25 @@ class InvoicesController < ApplicationController
   def load_invoice_from_xml
     if params[:invoice][:xml_file].present?
       @invoice = Invoice.from_file(params[:invoice][:xml_file])
-      if @invoice.nil?
-        redirect_to new_invoice_path
-        # return
-      end
       render :new
+      return
     else
       redirect_to new_invoice_path
+    end
+
+      # if @invoice.nil?
+      #   redirect_to new_invoice_path
+        # return
+    #   end
+    #   render :new
+    # else
+    #   redirect_to new_invoice_path
       # @invoice = Invoice.new(invoice_params)
       # @invoice.payer = payer
       # @invoice.seller = current_user.client.seller
       # @invoice.save!
-    end
-    redirect_to root_path
+    # end
+    # redirect_to root_path
   end
 
   def create
