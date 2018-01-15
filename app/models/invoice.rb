@@ -19,19 +19,18 @@ class Invoice < ApplicationRecord
     file.rewind
     invoice = Invoice.new
     invoice.invoice_number = doc.search('fat nFat').text.strip
-    invoice.total_value = Money.new(doc.search('fat vLiq').text.to_f)
+    # delete("\n .")): takes out blanks spaces, points and paragraphs, otherwise Money class will read "1000.00" as 1000 and convert to 10.00
+    invoice.total_value = Money.new( doc.search('fat vLiq').text.delete("\n ."))
 
     dups = doc.search('dup')
     dups.each do |dup|
       i = Installment.new
       i.number = dup.search('nDup').text.strip
-      i.value = Money.new(dup.search('vDup').text.to_f)
+      # delete("\n .")): takes out blanks spaces, points and paragraphs, otherwise Money class will read "1000.00" as 1000 and convert to 10.00
+      i.value = Money.new(dup.search('vDup').text.delete("\n ."))
       i.due_date = dup.search('dVenc').text.strip
       i.invoice = invoice
       invoice.installments.push(i)
-      # i.save!
-      # i.outstanding_days = TimeDifference.between(i.due_date, i.updated_at).in_days
-      # i.save
     end
     return invoice
   end
