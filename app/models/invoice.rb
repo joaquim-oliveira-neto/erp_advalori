@@ -21,24 +21,8 @@ class Invoice < ApplicationRecord
     file.rewind
     invoice = Invoice.new
     invoice = extract_invoice_general_info(doc, invoice)
+    invoice = extract_installments(doc, invoice)
     invoice = extract_payer_info(doc, invoice)
-
-
-    # invoice.invoice_number = doc.search('fat nFat').text.strip
-    # # delete("\n .")): takes out blanks spaces, points and paragraphs, otherwise Money class will read "1000.00" as 1000 and convert to 10.00
-    # invoice.total_value = Money.new( doc.search('fat vLiq').text.delete("\n ."))
-
-    #TODO: criar um método só para extrair os intallments
-    dups = doc.search('dup')
-    dups.each do |dup|
-      i = Installment.new
-      i.number = dup.search('nDup').text.strip
-      # delete("\n .")): takes out blanks spaces, points and paragraphs, otherwise Money class will read "1000.00" as 1000 and convert to 10.00
-      i.value = Money.new(dup.search('vDup').text.delete("\n ."))
-      i.due_date = dup.search('dVenc').text.strip
-      i.invoice = invoice
-      invoice.installments.push(i)
-    end
     return invoice
   end
 
@@ -51,14 +35,33 @@ class Invoice < ApplicationRecord
     return invoice
   end
 
-  def self.extract_payer_info (doc, invoice)
-    payer = Payer.new
-    doc.search('dest').each do |xml_payer_info|
-      payer.identification_number =  xml_payer_info.search('CNPJ').text.strip
-      payer.company_name =  xml_payer_info.search('xNome').text.strip
+  def self.extract_installments (doc, invoice)
+    doc.search('dup').each do |xml_installments_info|
+      i = Installment.new
+      i.number = xml_installments_info.search('nDup').text.strip
+      # delete("\n .")): takes out blanks spaces, points and paragraphs, otherwise Money class will read "1000.00" as 1000 and convert to 10.00
+      i.value = Money.new(xml_installments_info.search('vDup').text.delete("\n ."))
+      i.due_date = xml_installments_info.search('dVenc').text.strip
+      i.invoice = invoice
+      invoice.installments.push(i)
     end
-    invoice.payer = payer
     return invoice
+  end
+
+  #TODO: split this method so that we don't have two returns
+  def self.extract_payer_info (doc, invoice)
+    doc.search('dest').each do |xml_payer_info|
+      identification_number =  xml_payer_info.search('CNPJ').text.strip
+      if Payer.exists?(identification_number: identification_number)
+        payer = Payer.find_by_identification_number(identification_number)
+      else
+        payer = Payer.new
+        payer.identification_number = identification_number
+        payer.company_name =  xml_payer_info.search('xNome').text.strip
+      end
+      invoice.payer = payer
+      return invoice
+    end
   end
 
 end
