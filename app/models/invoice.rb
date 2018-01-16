@@ -22,13 +22,20 @@ class Invoice < ApplicationRecord
     invoice = Invoice.new
     invoice = extract_invoice_general_info(doc, invoice)
     invoice = extract_payer_info(doc, invoice)
+    invoice = extract_installments(doc, invoice)
+    return invoice
+  end
 
+  private
 
-    # invoice.invoice_number = doc.search('fat nFat').text.strip
-    # # delete("\n .")): takes out blanks spaces, points and paragraphs, otherwise Money class will read "1000.00" as 1000 and convert to 10.00
-    # invoice.total_value = Money.new( doc.search('fat vLiq').text.delete("\n ."))
+  def self.extract_invoice_general_info (doc, invoice)
+    invoice.invoice_number = doc.search('fat nFat').text.strip
+    # delete("\n .")): takes out blanks spaces, points and paragraphs, otherwise Money class will read "1000.00" as 1000 and convert to 10.00
+    invoice.total_value = Money.new(doc.search('fat vLiq').text.delete("\n ."))
+    return invoice
+  end
 
-    #TODO: criar um método só para extrair os intallments
+  def self.extract_installments (doc, invoice)
     dups = doc.search('dup')
     dups.each do |dup|
       i = Installment.new
@@ -39,15 +46,6 @@ class Invoice < ApplicationRecord
       i.invoice = invoice
       invoice.installments.push(i)
     end
-    return invoice
-  end
-
-  private
-
-  def self.extract_invoice_general_info (doc, invoice)
-    invoice.invoice_number = doc.search('fat nFat').text.strip
-    # delete("\n .")): takes out blanks spaces, points and paragraphs, otherwise Money class will read "1000.00" as 1000 and convert to 10.00
-    invoice.total_value = Money.new(doc.search('fat vLiq').text.delete("\n ."))
     return invoice
   end
 
