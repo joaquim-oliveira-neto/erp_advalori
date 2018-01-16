@@ -1,7 +1,6 @@
 
 <%= simple_form_for @invoice, url: invoices_load_xml_path do |f| %>
   <%= f.error_notification %>
-
   <div class="form-inputs">
     <div class="control-group">
       <%= f.label :xml_file, class: 'control-label' %>
@@ -13,7 +12,6 @@
       <%= f.submit 'carregar xml', :class => 'btn btn-primary' %>
     </div>
   </div>
-
 <% end %>
 
 <div class="container">
@@ -29,9 +27,10 @@
       <div class="row">
         <div class="col-xs-12">
           <%= simple_form_for(@invoice, url: invoices_path) do |f| %>
-          <%# tentar com @invoice.payer %>
-            <%= f.collection_select :payer_id, Payer.all, :id, :company_name, prompt: 'select starship' %>
-            <%#= @invoice.seller %>
+            <%= f.simple_fields_for :payer do |payer| %>
+              <%= payer.input :company_name %>
+              <%= payer.input :identification_number  %>
+            <% end %>
             <%= f.input :invoice_type , as: :radio_buttons, collection: [['Nota fiscal', 'nota_fiscal'], ['Cheque', 'check'], ['Outros', 'outro']], label: "Tipo de documento:" %>
             <%= f.input :invoice_number %>
             <%= f.input :contract_number %>

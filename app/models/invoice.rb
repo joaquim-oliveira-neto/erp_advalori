@@ -23,6 +23,7 @@ class Invoice < ApplicationRecord
     invoice = extract_invoice_general_info(doc, invoice)
     invoice = extract_payer_info(doc, invoice)
 
+
     # invoice.invoice_number = doc.search('fat nFat').text.strip
     # # delete("\n .")): takes out blanks spaces, points and paragraphs, otherwise Money class will read "1000.00" as 1000 and convert to 10.00
     # invoice.total_value = Money.new( doc.search('fat vLiq').text.delete("\n ."))
@@ -52,7 +53,7 @@ class Invoice < ApplicationRecord
 
   def self.extract_payer_info (doc, invoice)
     payer = Payer.new
-    doc.search('dest') do |xml_payer_info|
+    doc.search('dest').each do |xml_payer_info|
       payer.identification_number =  xml_payer_info.search('CNPJ').text.strip
       payer.company_name =  xml_payer_info.search('xNome').text.strip
     end
