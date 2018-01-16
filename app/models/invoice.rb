@@ -7,6 +7,8 @@ class Invoice < ApplicationRecord
   accepts_nested_attributes_for :installments,
                                 allow_destroy: true
                                 # reject_if: :all_blank
+  accepts_nested_attributes_for :payer,
+                                allow_destroy: true
   # We need this to upload the invoices in xml format
   has_attached_file :xml_file
 
@@ -18,10 +20,14 @@ class Invoice < ApplicationRecord
     doc = Nokogiri::XML(file.read)
     file.rewind
     invoice = Invoice.new
-    invoice.invoice_number = doc.search('fat nFat').text.strip
-    # delete("\n .")): takes out blanks spaces, points and paragraphs, otherwise Money class will read "1000.00" as 1000 and convert to 10.00
-    invoice.total_value = Money.new( doc.search('fat vLiq').text.delete("\n ."))
+    invoice = extract_invoice_general_info(doc, invoice)
+    invoice = extract_payer_info(doc, invoice)
 
+    # invoice.invoice_number = doc.search('fat nFat').text.strip
+    # # delete("\n .")): takes out blanks spaces, points and paragraphs, otherwise Money class will read "1000.00" as 1000 and convert to 10.00
+    # invoice.total_value = Money.new( doc.search('fat vLiq').text.delete("\n ."))
+
+    #TODO: criar um método só para extrair os intallments
     dups = doc.search('dup')
     dups.each do |dup|
       i = Installment.new
@@ -32,6 +38,25 @@ class Invoice < ApplicationRecord
       i.invoice = invoice
       invoice.installments.push(i)
     end
+    return invoice
+  end
+
+  private
+
+  def self.extract_invoice_general_info (doc, invoice)
+    invoice.invoice_number = doc.search('fat nFat').text.strip
+    # delete("\n .")): takes out blanks spaces, points and paragraphs, otherwise Money class will read "1000.00" as 1000 and convert to 10.00
+    invoice.total_value = Money.new(doc.search('fat vLiq').text.delete("\n ."))
+    return invoice
+  end
+
+  def self.extract_payer_info (doc, invoice)
+    payer = Payer.new
+    doc.search('dest') do |xml_payer_info|
+      payer.identification_number =  xml_payer_info.search('CNPJ').text.strip
+      payer.company_name =  xml_payer_info.search('xNome').text.strip
+    end
+    invoice.payer = payer
     return invoice
   end
 

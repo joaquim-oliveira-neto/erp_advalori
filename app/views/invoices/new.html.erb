@@ -29,7 +29,8 @@
       <div class="row">
         <div class="col-xs-12">
           <%= simple_form_for(@invoice, url: invoices_path) do |f| %>
-            <%= f.association :payer %>
+          <%# tentar com @invoice.payer %>
+            <%= f.collection_select :payer_id, Payer.all, :id, :company_name, prompt: 'select starship' %>
             <%#= @invoice.seller %>
             <%= f.input :invoice_type , as: :radio_buttons, collection: [['Nota fiscal', 'nota_fiscal'], ['Cheque', 'check'], ['Outros', 'outro']], label: "Tipo de documento:" %>
             <%= f.input :invoice_number %>

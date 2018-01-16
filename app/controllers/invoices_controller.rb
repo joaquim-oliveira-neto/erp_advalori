@@ -2,6 +2,9 @@ class InvoicesController < ApplicationController
   def new
     @invoice = Invoice.new
     @invoice.installments.build
+    @invoice.build_payer
+    # binding.pry
+
   end
 
   def load_invoice_from_xml
@@ -30,6 +33,6 @@ class InvoicesController < ApplicationController
     # In the strong parameters we need to pass the attributes of intallments so that the invoice form can undertant it
     params
       .require(:invoice)
-      .permit(:invoice_number, :total_value, :contract_number, :check_number, :invoice_type, installments_attributes: [:id, :invoice_id, :_destroy, :number, :value, :due_date])
+      .permit(:invoice_number, :total_value, :contract_number, :check_number, :invoice_type, installments_attributes: [:id, :invoice_id, :_destroy, :number, :value, :due_date], payer_attributes: [:id, :company_name])
   end
 end
