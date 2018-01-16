@@ -3,7 +3,7 @@ class InvoicesController < ApplicationController
     @invoice = Invoice.new
     @invoice.installments.build
     @invoice.build_payer
-    # binding.pry
+
 
   end
 
@@ -11,6 +11,7 @@ class InvoicesController < ApplicationController
     if params[:invoice][:xml_file].present?
       @invoice = Invoice.from_file(params[:invoice][:xml_file])
       render :new
+
       return
     else
       redirect_to new_invoice_path
