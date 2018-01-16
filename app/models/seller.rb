@@ -5,4 +5,6 @@ class Seller < ApplicationRecord
   has_many :sellers_concentrations
   has_many :operations
   has_many :invoices, through: :operations
+
+  validates :identification_number, uniqueness: true
 end
