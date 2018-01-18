@@ -60,6 +60,13 @@ class Invoice < ApplicationRecord
         payer = Payer.new
         payer.identification_number = identification_number
         payer.company_name = xml_payer_info.search('xNome').text.strip
+        payer.address = xml_payer_info.search('xLgr').text.strip
+        payer.address_number = xml_payer_info.search('nro').text.strip
+        payer.neighborhood = xml_payer_info.search('xBairro').text.strip
+        payer.city = xml_payer_info.search('xMun').text.strip
+        payer.state = xml_payer_info.search('UF').text.strip
+        payer.zip_code = xml_payer_info.search('CEP').text.strip
+        payer.registration_number = xml_payer_info.search('IE').text.strip
       end
       invoice.payer = payer
       return invoice
