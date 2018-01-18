@@ -54,6 +54,6 @@ class InvoicesController < ApplicationController
   def payer_params
     params
       .require(:invoice)
-      .permit(payer_attributes: [:company_name, :identification_number])
+      .permit(payer_attributes: [:company_name, :identification_number, :address, :address_number, :neighborhood, :city, :state, :zip_code, :registration_number])
   end
 end
