@@ -1,4 +1,8 @@
 class OperationsController < ApplicationController
+  def index
+
+  end
+
   def new
   end
 
@@ -6,5 +10,8 @@ class OperationsController < ApplicationController
   end
 
   def show
+    @operation = Operation.find(params[:id])
+    @seller = @operation.seller
+    @invoices = @operation.invoices
   end
 end
