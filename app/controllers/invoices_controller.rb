@@ -27,11 +27,15 @@ class InvoicesController < ApplicationController
       payer.save!
     end
     invoice.payer = payer
+    average = 0
     invoice.installments.each do |i|
       i.outstanding_days = TimeDifference.between(i.due_date, DateTime.now).in_days # TODO: Datetime.now will change to creation Operation date
+      average += i.outstanding_days
     end
     invoice.save!
     if invoice.save!
+      invoice.average_outstanding_days = (average / invoice.installments.count)
+      invoice.save!
       redirect_to root_path
     else
       render :new
