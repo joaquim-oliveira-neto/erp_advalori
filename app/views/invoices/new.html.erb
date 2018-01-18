@@ -39,6 +39,13 @@
             <%= f.simple_fields_for :payer do |payer| %>
               <%= payer.input :company_name %>
               <%= payer.input :identification_number %>
+              <%= payer.hidden_field :address %>
+              <%= payer.hidden_field :address_number %>
+              <%= payer.hidden_field :neighborhood %>
+              <%= payer.hidden_field :city %>
+              <%= payer.hidden_field :state %>
+              <%= payer.hidden_field :zip_code %>
+              <%= payer.hidden_field :registration_number %>
             <% end %>
             <%= f.input :invoice_type , as: :radio_buttons, collection: [['Nota fiscal', 'nota_fiscal'], ['Cheque', 'check'], ['Outros', 'outro']], label: "Tipo de documento:" %>
             <%= f.input :invoice_number %>

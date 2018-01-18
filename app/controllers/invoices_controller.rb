@@ -37,8 +37,15 @@ class InvoicesController < ApplicationController
     end
     invoice.payer = payer
     invoice.operation.seller = seller
+    average = 0
+    invoice.installments.each do |i|
+      i.outstanding_days = TimeDifference.between(i.due_date, DateTime.now).in_days # TODO: Datetime.now will change to creation Operation date
+      average += i.outstanding_days
+    end
     invoice.save!
     if invoice.save!
+      invoice.average_outstanding_days = (average / invoice.installments.count) # TODO: Refactor to bring these lines above
+      invoice.save!
       redirect_to root_path
     else
       render :new
@@ -63,9 +70,8 @@ class InvoicesController < ApplicationController
   def payer_params
     params
       .require(:invoice)
-      .permit(payer_attributes: [:company_name, :identification_number])
+      .permit(payer_attributes: [:company_name, :identification_number, :address, :address_number, :neighborhood, :city, :state, :zip_code, :registration_number])
   end
-
 
   def seller_params
     params
