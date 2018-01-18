@@ -9,6 +9,8 @@ class Invoice < ApplicationRecord
                                 # reject_if: :all_blank
   accepts_nested_attributes_for :payer,
                                 allow_destroy: true
+  accepts_nested_attributes_for :operation,
+                                allow_destroy: true
   # We need this to upload the invoices in xml format
   has_attached_file :xml_file
 
@@ -48,19 +50,34 @@ class Invoice < ApplicationRecord
     return invoice
   end
 
-  #TODO: split this method so that we don't have two returns
+  #TODO: split this method it is too big
   def self.extract_payer_info (doc, invoice)
     doc.search('dest').each do |xml_payer_info|
-      identification_number =  xml_payer_info.search('CNPJ').text.strip
+      identification_number = xml_payer_info.search('CNPJ').text.strip
       if Payer.exists?(identification_number: identification_number)
         payer = Payer.find_by_identification_number(identification_number)
       else
         payer = Payer.new
         payer.identification_number = identification_number
-        payer.company_name =  xml_payer_info.search('xNome').text.strip
+        payer.company_name = xml_payer_info.search('xNome').text.strip
       end
       invoice.payer = payer
       return invoice
+    end
+  end
+
+  def self.extract_seller_info (doc, invoice)
+    doc.search('emit').each do |xml_seller_info|
+      identification_number = xml_seller_info.search('CNPJ').text.strip
+      if Seller.exists?(identification_number: identification_number)
+        seller = Seller.find_by_identification_number(identification_number)
+      else
+        seller = Seller.new
+        seller.identification_number = identification_number
+        seller.company_name = xml_seller_info.search('xNome').text.strip
+        seller.company_nickname = xml_seller_info.search('xFant').text.strip
+      end
+      invoice.operation.seller = seller
     end
   end
 
