@@ -11,6 +11,7 @@ class Invoice < ApplicationRecord
                                 allow_destroy: true
   accepts_nested_attributes_for :operation,
                                 allow_destroy: true
+
   # We need this to upload the invoices in xml format
   has_attached_file :xml_file
 
@@ -25,6 +26,8 @@ class Invoice < ApplicationRecord
     invoice = extract_invoice_general_info(doc, invoice)
     invoice = extract_installments(doc, invoice)
     invoice = extract_payer_info(doc, invoice)
+    invoice.operation = Operation.new(status: "olha eu aqui")
+    extract_seller_info(doc, invoice)
     return invoice
   end
 

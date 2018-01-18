@@ -19,6 +19,7 @@ class InvoicesController < ApplicationController
   # TODO: refactor with the Invoice class method self.extract_payer_info
   def create
     invoice = Invoice.new(invoice_and_intallments_params)
+    invoice.operation = Operation.new(operation_params[:operation_attributes])
     payer_identification_number = payer_params[:payer_attributes][:identification_number]
     if Payer.exists?(identification_number: payer_identification_number)
       payer = Payer.find_by_identification_number(payer_identification_number)
@@ -26,7 +27,16 @@ class InvoicesController < ApplicationController
       payer = Payer.new(payer_params[:payer_attributes])
       payer.save!
     end
+    seller_identification_number = seller_params[:operation_attributes][:seller_attributes][:identification_number]
+    if Seller.exists?(identification_number: seller_identification_number)
+      seller = Seller.find_by_identification_number(seller_identification_number)
+    else
+      seller = Seller.new(seller_params[:operation_attributes][:seller_attributes])
+      seller.client = current_user.client
+      seller.save!
+    end
     invoice.payer = payer
+    invoice.operation.seller = seller
     average = 0
     invoice.installments.each do |i|
       i.outstanding_days = TimeDifference.between(i.due_date, DateTime.now).in_days # TODO: Datetime.now will change to creation Operation date
@@ -34,7 +44,7 @@ class InvoicesController < ApplicationController
     end
     invoice.save!
     if invoice.save!
-      invoice.average_outstanding_days = (average / invoice.installments.count)
+      invoice.average_outstanding_days = (average / invoice.installments.count) # TODO: Refactor to bring these lines above
       invoice.save!
       redirect_to root_path
     else
@@ -51,9 +61,21 @@ class InvoicesController < ApplicationController
       .permit(:invoice_number, :total_value, :contract_number, :check_number, :invoice_type, installments_attributes: [:id, :invoice_id, :_destroy, :number, :value, :due_date])
   end
 
+  def operation_params
+    params
+      .require(:invoice)
+      .permit(operation_attributes: [:status])
+  end
+
   def payer_params
     params
       .require(:invoice)
       .permit(payer_attributes: [:company_name, :identification_number, :address, :address_number, :neighborhood, :city, :state, :zip_code, :registration_number])
+  end
+
+  def seller_params
+    params
+      .require(:invoice)
+      .permit(operation_attributes: [seller_attributes: [:company_name]])
   end
 end
