@@ -27,6 +27,9 @@ class InvoicesController < ApplicationController
       payer.save!
     end
     invoice.payer = payer
+    invoice.installments.each do |i|
+      i.outstanding_days = TimeDifference.between(i.due_date, DateTime.now).in_days # TODO: Datetime.now will change to creation Operation date
+    end
     invoice.save!
     if invoice.save!
       redirect_to root_path
