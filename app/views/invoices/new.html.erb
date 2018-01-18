@@ -26,9 +26,15 @@
       <div class="container">
       <div class="row">
         <div class="col-xs-12">
+
           <%= simple_form_for(@invoice, url: invoices_path) do |f| %>
             <h3>Cedente</h3>
-
+            <%= f.simple_fields_for :operation do |operation| %>
+              <%= operation.input :status %>
+              <%= operation.simple_fields_for :seller do |seller| %>
+                <%= seller.input :company_name %>
+              <% end %>
+            <% end %>
             <h3>Sacado</h3>
             <%= f.simple_fields_for :payer do |payer| %>
               <%= payer.input :company_name %>
