@@ -39,7 +39,8 @@ class InvoicesController < ApplicationController
     invoice.operation.seller = seller
     average = 0
     invoice.installments.each do |i|
-      i.outstanding_days = TimeDifference.between(i.due_date, DateTime.now).in_days # TODO: Datetime.now will change to creation Operation date
+      # TODO mexi nesta linha preciso deixar como estava antes
+      i.outstanding_days = 30 # TODO: Datetime.now will change to creation Operation date
       average += i.outstanding_days
     end
     invoice.save!
