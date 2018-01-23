@@ -27,7 +27,7 @@ gem 'money-rails', '~> 1' #https://github.com/RubyMoney/money-rails
 gem 'cocoon'
 
 #   This gem is used to upload documents using a form
-gem "paperclip", "~> 5.0.0"
+gem "paperclip"
 
 group :development do
   gem 'web-console', '>= 3.3.0'
